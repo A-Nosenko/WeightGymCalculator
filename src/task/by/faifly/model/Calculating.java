@@ -49,11 +49,13 @@ public class Calculating {
         Locale locale = Locale.getDefault();
         ResourceBundle resourceBundle = ResourceBundle.getBundle(Constants.RES_NAME, locale);
 
-        String date = new Formatter().format(locale, Constants.DATE_FORMATTING, new Date()).toString();
+        String date = new Formatter().format(
+                locale, Constants.DATE_FORMATTING, new Date()).toString();
         builder.append(date);
         builder.append(System.lineSeparator());
 
-        String report = resourceBundle.getString(BundleKeys.RESULT) + type + Constants.EQUALS + getMaximum();
+        String report = resourceBundle.getString(BundleKeys.RESULT) + type + Constants.EQUALS
+                + getMaximum() + resourceBundle.getString(BundleKeys.KG);
         builder.append(report);
         builder.append(System.lineSeparator());
 

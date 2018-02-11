@@ -113,6 +113,8 @@ public class MainFrame extends JFrame {
         jSpinnerCount = new JSpinner(spinnerCountModel);
 
         jTextArea = new JTextArea();
+        jTextArea.setEditable(false);
+        jTextArea.setEnabled(false);
         result = new JScrollPane(jTextArea);
         Dimension dimension = new Dimension(Constants.WIDTH_RESULT_TEXT, Constants.HIGHT);
         result.setMinimumSize(dimension);
@@ -161,9 +163,8 @@ public class MainFrame extends JFrame {
 
     private void updateResult() {
         StringBuilder builder = new StringBuilder();
-        for (Calculating calculating : holder.getCalculatingList()) {
-            builder.append(calculating);
-        }
+        holder.getCalculatingList().stream().forEach(builder::append);
+
         jTextArea.setText(builder.toString());
     }
 
@@ -175,6 +176,7 @@ public class MainFrame extends JFrame {
 
             Marker.appendLightTheme(buttonPanel, middleButtonPanel, eastButtonPanel);
             Marker.appendLightTheme(jTextTypeMarker, jTextWeightMarker, jTextCountMarker);
+            Marker.appendLightTheme(jTextArea);
 
             lightThemeButton.setBorderPainted(true);
             darkThemeButton.setBorderPainted(false);
@@ -187,6 +189,7 @@ public class MainFrame extends JFrame {
 
             Marker.appendDarkTheme(buttonPanel, middleButtonPanel, eastButtonPanel);
             Marker.appendDarkTheme(jTextTypeMarker, jTextWeightMarker, jTextCountMarker);
+            Marker.appendDarkTheme(jTextArea);
 
             darkThemeButton.setBorderPainted(true);
             lightThemeButton.setBorderPainted(false);

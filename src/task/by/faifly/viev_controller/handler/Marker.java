@@ -40,6 +40,13 @@ public class Marker {
         }
     }
 
+    public static void appendLightTheme(JTextField... jTextFields) {
+        for (JTextField jTextField : jTextFields) {
+            jTextField.setBackground(Constants.LIGHT_THEME_COLOR);
+            jTextField.setDisabledTextColor(BLACK);
+        }
+    }
+
     public static void appendDarkTheme(JTextField... jTextFields) {
         for (JTextField jTextField : jTextFields) {
             jTextField.setBackground(Constants.DARK_THEME_COLOR);
@@ -47,11 +54,14 @@ public class Marker {
         }
     }
 
-    public static void appendLightTheme(JTextField... jTextFields) {
-        for (JTextField jTextField : jTextFields) {
-            jTextField.setBackground(Constants.LIGHT_THEME_COLOR);
-            jTextField.setDisabledTextColor(BLACK);
-        }
+    public static void appendLightTheme(JTextArea jTextArea) {
+        jTextArea.setBackground(Constants.LIGHT_THEME_COLOR);
+        jTextArea.setDisabledTextColor(BLACK);
+    }
+
+    public static void appendDarkTheme(JTextArea jTextArea) {
+        jTextArea.setBackground(Constants.DARK_THEME_COLOR);
+        jTextArea.setDisabledTextColor(RED);
     }
 
     public static void updateText(ResourceBundle resourceBundle, JFrame jFrame, JButton lightThemeButton,

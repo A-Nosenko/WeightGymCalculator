@@ -50,5 +50,6 @@ public class Constants {
         public static final String RU = "ru";
         public static final String RESULT = "result";
         public static final String START = "start";
+        public static final String KG = "kg";
     }
 }
