@@ -58,6 +58,7 @@ public class Calculating {
                 + getMaximum() + resourceBundle.getString(BundleKeys.KG);
         builder.append(report);
         builder.append(System.lineSeparator());
+        builder.append(System.lineSeparator());
 
         return builder.toString();
     }

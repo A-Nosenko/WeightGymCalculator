@@ -18,14 +18,16 @@ import java.util.ResourceBundle;
  */
 public class MainFrame extends JFrame {
 
+    private  final Dimension dimension = new Dimension(Constants.WIDTH_RESULT_TEXT,
+            Constants.HIGHT_RESULT_TEXT);
     private final task.by.faifly.model.Type[] items = new task.by.faifly.model.Type[]{
             task.by.faifly.model.Type.BenchPressing,
             task.by.faifly.model.Type.Deadlift,
             task.by.faifly.model.Type.Squats
     };
-    JFrame jFrame = this;
-    ResourceBundle resourceBundle;
-    private CalculatingHolder holder;
+    private final JFrame jFrame = this;
+    private ResourceBundle resourceBundle;
+    private final CalculatingHolder holder;
     private Locale locale;
     private Calculating currentCalculating;
     private JPanel buttonPanel;
@@ -48,8 +50,6 @@ public class MainFrame extends JFrame {
     private Theme theme;
     private Text text;
     private Start start;
-
-    private task.by.faifly.model.Type selectedItem;
 
     public MainFrame() {
         holder = CalculatingHolder.getHolder();
@@ -76,6 +76,7 @@ public class MainFrame extends JFrame {
         buttonPanel = new JPanel();
         middleButtonPanel = new JPanel();
         eastButtonPanel = new JPanel();
+        eastButtonPanel.setMaximumSize(dimension);
 
         lightThemeButton = new JButton();
         lightThemeButton.addActionListener(theme::light);
@@ -116,13 +117,7 @@ public class MainFrame extends JFrame {
         jTextArea.setEditable(false);
         jTextArea.setEnabled(false);
         result = new JScrollPane(jTextArea);
-        Dimension dimension = new Dimension(Constants.WIDTH_RESULT_TEXT, Constants.HIGHT);
-        result.setMinimumSize(dimension);
-        result.setMaximumSize(dimension);
-        result.setAutoscrolls(true);
-        result.setVerticalScrollBar(new JScrollBar());
-        result.setBorder(null);
-        result.setEnabled(true);
+        setPreferredSize(dimension);
         updateResult();
 
         startButton = new JButton();
@@ -150,6 +145,7 @@ public class MainFrame extends JFrame {
         middleButtonPanel.add(jSpinnerCount);
         middleButtonPanel.add(startButton);
 
+        eastButtonPanel.setLayout(new BorderLayout());
         eastButtonPanel.add(result);
 
         add(buttonPanel, BorderLayout.NORTH);
@@ -164,8 +160,8 @@ public class MainFrame extends JFrame {
     private void updateResult() {
         StringBuilder builder = new StringBuilder();
         holder.getCalculatingList().stream().forEach(builder::append);
-
         jTextArea.setText(builder.toString());
+        eastButtonPanel.updateUI();
     }
 
     private class Theme {

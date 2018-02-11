@@ -19,9 +19,10 @@ public class Constants {
     public static final String DATE_FORMATTING = "%1$tT %1$tM %1$te,%1$tY";
     public static final String EQUALS = " = ";
 
-    public static final int WIDTH = 700;
+    public static final int WIDTH = 800;
     public static final int HIGHT = 700;
     public static final int WIDTH_RESULT_TEXT = 300;
+    public static final int HIGHT_RESULT_TEXT = 500;
 
     public static final double MAX_WEIGHT = 1000;
 

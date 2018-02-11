@@ -15,7 +15,7 @@ import java.util.logging.Logger;
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        TestTypes.class, TestCalculating.class
+        TestTypes.class, TestCalculating.class, TestMainFrame.class
 })
 public class AllTests {
     private static final Logger LOG = Logger.getLogger(AllTests.class.getName());
