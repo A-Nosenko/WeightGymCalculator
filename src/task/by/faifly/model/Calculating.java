@@ -38,6 +38,10 @@ public class Calculating {
         this.weight = weight;
     }
 
+    public Type getType() {
+        return type;
+    }
+
     public String getMaximum() {
         double result = weight * type.getKeys()[count];
         return String.format("%.1f", result);

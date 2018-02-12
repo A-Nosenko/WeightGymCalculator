@@ -6,17 +6,24 @@ import task.by.faifly.model.Constants;
 import task.by.faifly.model.Constants.BundleKeys;
 import task.by.faifly.viev_controller.handler.Marker;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
 
 /**
  * @author Anatolii Nosenko
  * @version 1.0 2/10/2018.
  */
 public class MainFrame extends JFrame {
+
+    private static final Logger LOG = Logger.getLogger(MainFrame.class.getName());
 
     private  final Dimension dimension = new Dimension(Constants.WIDTH_RESULT_TEXT,
             Constants.HIGHT_RESULT_TEXT);
@@ -25,14 +32,13 @@ public class MainFrame extends JFrame {
             task.by.faifly.model.Type.Deadlift,
             task.by.faifly.model.Type.Squats
     };
+
     private final JFrame jFrame = this;
-    private ResourceBundle resourceBundle;
-    private final CalculatingHolder holder;
-    private Locale locale;
-    private Calculating currentCalculating;
-    private JPanel buttonPanel;
-    private JPanel middleButtonPanel;
-    private JPanel eastButtonPanel;
+
+    private JPanel northPanel;
+    private JPanel middlePanel;
+    private JPanel eastPanel;
+    private JPanel southPanel;
     private JButton lightThemeButton;
     private JButton darkThemeButton;
     private JButton engLanguageButton;
@@ -44,12 +50,18 @@ public class MainFrame extends JFrame {
     private JTextField jTextWeightMarker;
     private JComboBox<task.by.faifly.model.Type> jComboBox;
     private JTextField jTextCountMarker;
-
-    private JScrollPane result;
     private JTextArea jTextArea;
+    private JLabel jLabel;
+
     private Theme theme;
     private Text text;
     private Start start;
+    private ImageUpdater imageUpdater;
+
+    private ResourceBundle resourceBundle;
+    private final CalculatingHolder holder;
+    private Locale locale;
+    private Calculating currentCalculating;
 
     public MainFrame() {
         holder = CalculatingHolder.getHolder();
@@ -58,6 +70,7 @@ public class MainFrame extends JFrame {
         theme = new Theme();
         text = new Text();
         start = new Start();
+        imageUpdater = new ImageUpdater();
         currentCalculating = new Calculating(task.by.faifly.model.Type.BenchPressing);
         initUI();
     }
@@ -73,10 +86,12 @@ public class MainFrame extends JFrame {
 
     private void initUI() {
         setSize(Constants.WIDTH, Constants.HIGHT);
-        buttonPanel = new JPanel();
-        middleButtonPanel = new JPanel();
-        eastButtonPanel = new JPanel();
-        eastButtonPanel.setMaximumSize(dimension);
+
+        northPanel = new JPanel();
+        middlePanel = new JPanel();
+        eastPanel = new JPanel();
+        southPanel = new JPanel();
+        eastPanel.setMaximumSize(dimension);
 
         lightThemeButton = new JButton();
         lightThemeButton.addActionListener(theme::light);
@@ -90,12 +105,18 @@ public class MainFrame extends JFrame {
         rusLanguageButton = new JButton();
         rusLanguageButton.addActionListener(text::setRusText);
 
+        northPanel.add(lightThemeButton);
+        northPanel.add(darkThemeButton);
+        northPanel.add(engLanguageButton);
+        northPanel.add(rusLanguageButton);
+
         jTextTypeMarker = new JTextField();
         jTextTypeMarker.setEditable(false);
         jTextTypeMarker.setBorder(null);
         jTextTypeMarker.setEnabled(false);
 
         jComboBox = new JComboBox<>(items);
+        jComboBox.addActionListener(imageUpdater::updateImage);
 
         jTextWeightMarker = new JTextField();
         jTextWeightMarker.setEditable(false);
@@ -116,41 +137,39 @@ public class MainFrame extends JFrame {
         jTextArea = new JTextArea();
         jTextArea.setEditable(false);
         jTextArea.setEnabled(false);
-        result = new JScrollPane(jTextArea);
-        setPreferredSize(dimension);
-        updateResult();
+
+        JScrollPane result = new JScrollPane(jTextArea);
 
         startButton = new JButton();
         startButton.addActionListener(start::start);
 
-        theme.init();
-        theme.light(null);
-        text.setEngText(null);
+        middlePanel.add(jTextTypeMarker);
+        middlePanel.add(jComboBox);
+        middlePanel.add(jTextWeightMarker);
+        middlePanel.add(jSpinnerWeight);
+        middlePanel.add(jTextCountMarker);
+        middlePanel.add(jSpinnerCount);
+        middlePanel.add(startButton);
+
+        jLabel = new JLabel();
+        imageUpdater.updateImage(null);
+        southPanel.add(jLabel);
 
         Marker.updateText(resourceBundle, jFrame, lightThemeButton, darkThemeButton, engLanguageButton,
                 rusLanguageButton, jTextTypeMarker, jTextWeightMarker, jTextCountMarker, startButton);
 
-        buttonPanel.add(lightThemeButton);
-        buttonPanel.add(darkThemeButton);
-        buttonPanel.add(engLanguageButton);
-        buttonPanel.add(rusLanguageButton);
+        eastPanel.setLayout(new BorderLayout());
+        updateResult();
+        eastPanel.add(result);
 
-        middleButtonPanel.add(jTextTypeMarker);
-        middleButtonPanel.add(jComboBox);
+        add(northPanel, BorderLayout.NORTH);
+        add(middlePanel, BorderLayout.CENTER);
+        add(eastPanel, BorderLayout.EAST);
+        add(southPanel, BorderLayout.SOUTH);
 
-        middleButtonPanel.add(jTextWeightMarker);
-        middleButtonPanel.add(jSpinnerWeight);
-
-        middleButtonPanel.add(jTextCountMarker);
-        middleButtonPanel.add(jSpinnerCount);
-        middleButtonPanel.add(startButton);
-
-        eastButtonPanel.setLayout(new BorderLayout());
-        eastButtonPanel.add(result);
-
-        add(buttonPanel, BorderLayout.NORTH);
-        add(middleButtonPanel, BorderLayout.CENTER);
-        add(eastButtonPanel, BorderLayout.EAST);
+        theme.init();
+        theme.light(null);
+        text.setEngText(null);
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
@@ -161,16 +180,48 @@ public class MainFrame extends JFrame {
         StringBuilder builder = new StringBuilder();
         holder.getCalculatingList().stream().forEach(builder::append);
         jTextArea.setText(builder.toString());
-        eastButtonPanel.updateUI();
+        eastPanel.updateUI();
     }
 
+    private class ImageUpdater {
+        private void updateImage(ActionEvent e) {
+
+            String path = null;
+
+            if (e == null) {
+                path = Constants.IMAGE_GYM;
+            } else {
+                task.by.faifly.model.Type type = (task.by.faifly.model.Type)
+                        ((JComboBox) e.getSource()).getSelectedItem();
+                switch (type) {
+                    case BenchPressing:
+                        path = Constants.IMAGE_GYM;
+                        break;
+                    case Deadlift:
+                        path = Constants.IMAGE_LIFT;
+                        break;
+                    case Squats:
+                        path = Constants.IMAGE_SQUAT;
+                        break;
+                }
+            }
+
+            try {
+                BufferedImage image = ImageIO.read(new File(path));
+                ImageIcon imageIcon = new ImageIcon(image);
+                jLabel.setIcon(imageIcon);
+            } catch (IOException ex) {
+                LOG.info(ex.getMessage());
+            }
+        }
+    }
     private class Theme {
         private void light(ActionEvent e) {
 
             Marker.appendLightTheme(lightThemeButton, darkThemeButton,
                     engLanguageButton, rusLanguageButton, startButton);
 
-            Marker.appendLightTheme(buttonPanel, middleButtonPanel, eastButtonPanel);
+            Marker.appendLightTheme(northPanel, middlePanel, eastPanel, northPanel, southPanel);
             Marker.appendLightTheme(jTextTypeMarker, jTextWeightMarker, jTextCountMarker);
             Marker.appendLightTheme(jTextArea);
 
@@ -183,7 +234,7 @@ public class MainFrame extends JFrame {
             Marker.appendDarkTheme(lightThemeButton, darkThemeButton,
                     engLanguageButton, rusLanguageButton, startButton);
 
-            Marker.appendDarkTheme(buttonPanel, middleButtonPanel, eastButtonPanel);
+            Marker.appendDarkTheme(northPanel, middlePanel, eastPanel, southPanel);
             Marker.appendDarkTheme(jTextTypeMarker, jTextWeightMarker, jTextCountMarker);
             Marker.appendDarkTheme(jTextArea);
 

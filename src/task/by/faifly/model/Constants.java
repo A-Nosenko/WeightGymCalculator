@@ -14,6 +14,9 @@ public class Constants {
 
     public static final Color LIGHT_THEME_COLOR = new Color(200, 211, 200);
     public static final Color DARK_THEME_COLOR = new Color(31, 51, 71);
+    public static final String IMAGE_GYM = "res/images/gym.gif";
+    public static final String IMAGE_LIFT = "res/images/lift.gif";
+    public static final String IMAGE_SQUAT = "res/images/squat.gif";
 
     public static final String RES_NAME = "resources";
     public static final String DATE_FORMATTING = "%1$tT %1$tM %1$te,%1$tY";
