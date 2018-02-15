@@ -8,6 +8,9 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
+ * Class contains data and method to calculate maximum weight you can perform in
+ * single approach. Data is weight and count in multiple exercises.
+ *
  * @author Anatolii Nosenko
  * @version 1.0 2/10/2018.
  */
@@ -20,16 +23,6 @@ public class Calculating {
         this.type = type;
     }
 
-    public Calculating(Type type, int count, double weight) {
-        this.type = type;
-        this.count = count;
-        this.weight = weight;
-    }
-
-    public void setType(Type type) {
-        this.type = type;
-    }
-
     public void setCount(int count) {
         this.count = count;
     }
@@ -38,10 +31,9 @@ public class Calculating {
         this.weight = weight;
     }
 
-    public Type getType() {
-        return type;
-    }
-
+    /**
+     * @return Maximum in single execution specified exercise.
+     */
     public String getMaximum() {
         double result = weight * type.getKeys()[count];
         return String.format("%.1f", result);

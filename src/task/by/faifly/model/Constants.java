@@ -3,12 +3,13 @@ package task.by.faifly.model;
 import java.awt.*;
 
 /**
+ * Contains constants.
  * Coefficients to calculate are taken from
+ * @see <a href = "http://extrastrong.ru/2010/04/22/max-squats-bench-press-deadlift/"> this </a>
+ * site.
  *
  * @author Anatolii Nosenko
  * @version 1.0 2/10/2018.
- * @see <a href = "http://extrastrong.ru/2010/04/22/max-squats-bench-press-deadlift/"> this </a>
- * site
  */
 public class Constants {
 

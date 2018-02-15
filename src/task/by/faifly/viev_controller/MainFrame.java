@@ -18,6 +18,8 @@ import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
 /**
+ * Main frame, contains UI components with their actions.
+ *
  * @author Anatolii Nosenko
  * @version 1.0 2/10/2018.
  */
@@ -34,7 +36,7 @@ public class MainFrame extends JFrame {
     };
 
     private final JFrame jFrame = this;
-
+    private final CalculatingHolder holder;
     private JPanel northPanel;
     private JPanel middlePanel;
     private JPanel eastPanel;
@@ -52,20 +54,18 @@ public class MainFrame extends JFrame {
     private JTextField jTextCountMarker;
     private JTextArea jTextArea;
     private JLabel jLabel;
-
     private Theme theme;
     private Text text;
     private Start start;
     private ImageUpdater imageUpdater;
-
     private ResourceBundle resourceBundle;
-    private final CalculatingHolder holder;
     private Locale locale;
     private Calculating currentCalculating;
 
     public MainFrame() {
         holder = CalculatingHolder.getHolder();
         locale = Locale.getDefault();
+
         updateTextRecourse();
         theme = new Theme();
         text = new Text();
@@ -171,11 +171,14 @@ public class MainFrame extends JFrame {
         theme.light(null);
         text.setEngText(null);
 
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         setLocationRelativeTo(null);
     }
 
+    /**
+     * Updates calculations results, suitable by language changing.
+     */
     private void updateResult() {
         StringBuilder builder = new StringBuilder();
         holder.getCalculatingList().stream().forEach(builder::append);
@@ -183,6 +186,9 @@ public class MainFrame extends JFrame {
         eastPanel.updateUI();
     }
 
+    /**
+     * Contains method to switch images.
+     */
     private class ImageUpdater {
         private void updateImage(ActionEvent e) {
 
@@ -215,6 +221,10 @@ public class MainFrame extends JFrame {
             }
         }
     }
+
+    /**
+     * Contains methods to apply light and dark themes and initial UI components state.
+     */
     private class Theme {
         private void light(ActionEvent e) {
 
@@ -251,6 +261,9 @@ public class MainFrame extends JFrame {
         }
     }
 
+    /**
+     * Contains methods to specify language.
+     */
     private class Text {
         private void setEngText(ActionEvent e) {
             Locale.setDefault(Locale.ENGLISH);
@@ -275,6 +288,9 @@ public class MainFrame extends JFrame {
         }
     }
 
+    /**
+     * Contains method to start calculation.
+     */
     private class Start {
         private void start(ActionEvent e) {
             currentCalculating = new Calculating((task.by.faifly.model.Type) jComboBox.getSelectedItem());

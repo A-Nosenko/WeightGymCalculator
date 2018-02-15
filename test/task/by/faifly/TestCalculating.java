@@ -4,7 +4,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import task.by.faifly.model.Calculating;
-import task.by.faifly.model.Constants.BundleKeys;
+import task.by.faifly.model.Constants;
 import task.by.faifly.model.Type;
 
 import java.util.Locale;
@@ -24,14 +24,35 @@ public class TestCalculating {
 
     @Test
     public void test() throws Exception {
+        Locale.setDefault(new Locale("ru"));
+        calculationTesting();
         Locale.setDefault(Locale.ENGLISH);
-        LOG.info(new Calculating(Type.BenchPressing, 8, 40).toString());
-        LOG.info(new Calculating(Type.Deadlift, 8, 40).toString());
-        LOG.info(new Calculating(Type.Squats, 8, 40).toString());
-        Locale.setDefault(new Locale(BundleKeys.RU));
-        LOG.info(new Calculating(Type.BenchPressing, 8, 40).toString());
-        LOG.info(new Calculating(Type.Deadlift, 8, 40).toString());
-        LOG.info(new Calculating(Type.Squats, 8, 40).toString());
+        calculationTesting();
+    }
+
+    private void calculationTesting() {
+        Calculating benchPressing = new Calculating(Type.BenchPressing);
+        for (int i = 1; i <= 10; i++) {
+            benchPressing.setCount(i);
+            for (int j = 0; j < Constants.MAX_WEIGHT; j += 10) {
+                benchPressing.setWeight(j);
+                LOG.info(benchPressing.toString());
+            }
+
+            Calculating deadlift = new Calculating(Type.Deadlift);
+            deadlift.setCount(i);
+            for (int j = 0; j < Constants.MAX_WEIGHT; j += 10) {
+                deadlift.setWeight(j);
+                LOG.info(deadlift.toString());
+            }
+
+            Calculating squats = new Calculating(Type.Squats);
+            squats.setCount(i);
+            for (int j = 0; j < Constants.MAX_WEIGHT; j += 10) {
+                squats.setWeight(j);
+                LOG.info(squats.toString());
+            }
+        }
     }
 
     @After

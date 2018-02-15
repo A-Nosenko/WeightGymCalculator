@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Class to hold calculations, have private constructor to apply singleton mode.
+ *
  * @author Anatolii Nosenko
  * @version 1.0 2/11/2018.
  */
