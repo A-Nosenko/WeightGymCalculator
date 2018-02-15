@@ -17,7 +17,6 @@ public enum Type {
     Squats(Constants.SQUATS_KEYS);
 
     private double[] keys;
-    private Locale locale = Locale.getDefault();
     private Type(double[] keys) {
         this.keys = keys;
     }
@@ -29,6 +28,7 @@ public enum Type {
 
     @Override
     public String toString() {
+        Locale locale = Locale.getDefault();
         ResourceBundle resourceBundle = ResourceBundle.getBundle("resources", locale);
         switch (Type.this) {
             case BenchPressing:

@@ -19,7 +19,7 @@ public class Constants {
     public static final String IMAGE_SQUAT = "res/images/squat.gif";
 
     public static final String RES_NAME = "resources";
-    public static final String DATE_FORMATTING = "%1$tT %1$tM %1$te,%1$tY";
+    public static final String DATE_FORMATTING = "  %1$tT\t%1$te %1$tB %1$tY";
     public static final String EQUALS = " = ";
 
     public static final int WIDTH = 800;

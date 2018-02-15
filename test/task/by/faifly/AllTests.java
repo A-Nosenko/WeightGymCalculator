@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
+import java.util.Locale;
 import java.util.logging.Logger;
 
 /**
@@ -23,6 +24,7 @@ public class AllTests {
     @Before
     public void setUp() throws Exception {
         LOG.info("Tests has started... ");
+        Locale.setDefault(Locale.ENGLISH);
     }
 
     @After

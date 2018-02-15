@@ -1,37 +1,46 @@
 package task.by.faifly;
 
+import org.assertj.swing.core.matcher.JButtonMatcher;
+import org.assertj.swing.fixture.JButtonFixture;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import task.by.faifly.viev_controller.MainFrame;
-import static org.junit.Assert.*;
-
-import java.util.logging.Logger;
 
 /**
  * @author Anatolii Nosenko
- * @version 1.0 2/12/2018.
+ * @version 1.0 2/13/2018.
  */
-public class TestMainFrame {
-    private static final Logger LOG = Logger.getLogger(TestMainFrame.class.getName());
+public class TestMainFrame extends AbstractUiTest {
 
-    private MainFrame mainFrame;
+    private JButtonFixture lightThemeButtonFixture;
+    private JButtonFixture darkThemeButtonFixture;
+    private JButtonFixture engLanguageButtonFixture;
+    private JButtonFixture rusLanguageButtonFixture;
+    private JButtonFixture startButtonFixture;
 
+    @Override
     @Before
-    public void setUp() throws Exception {
-        LOG.info("Test MainFrame has started ");
-        mainFrame = new MainFrame();
+    public void onSetUp() {
+        super.onSetUp();
+        this.lightThemeButtonFixture = this.frame.button(JButtonMatcher.withText("Light theme"));
+        this.darkThemeButtonFixture = this.frame.button(JButtonMatcher.withText("Dark theme"));
+        this.engLanguageButtonFixture = this.frame.button(JButtonMatcher.withText("En"));
+        this.rusLanguageButtonFixture = this.frame.button(JButtonMatcher.withText("Рус"));
+        this.startButtonFixture = this.frame.button(JButtonMatcher.withText("Start!"));
     }
 
     @Test
-    public void test() throws Exception {
-        assertNotNull(mainFrame);
-
+    public void testButtons() throws Exception {
+        lightThemeButtonFixture.requireVisible().requireEnabled().click();
+        darkThemeButtonFixture.requireVisible().requireEnabled().click();
+        engLanguageButtonFixture.requireVisible().requireEnabled().click();
+        rusLanguageButtonFixture.requireVisible().requireEnabled().click();
+        startButtonFixture.requireVisible().requireEnabled().click();
     }
 
+    @Override
     @After
-    public void tearDown() throws Exception {
-        mainFrame = null;
-        LOG.info("Test MainFrame has finished ");
+    public void onTearDown() {
+        super.onTearDown();
     }
 }
