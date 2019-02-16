@@ -27,16 +27,18 @@ public class MainFrame extends JFrame {
 
     private static final Logger LOG = Logger.getLogger(MainFrame.class.getName());
 
-    private  final Dimension dimension = new Dimension(Constants.WIDTH_RESULT_TEXT,
+    private final Dimension dimension = new Dimension(Constants.WIDTH_RESULT_TEXT,
             Constants.HIGHT_RESULT_TEXT);
     private final task.by.faifly.model.Type[] items = new task.by.faifly.model.Type[]{
             task.by.faifly.model.Type.BenchPressing,
             task.by.faifly.model.Type.Deadlift,
             task.by.faifly.model.Type.Squats
     };
-
     private final JFrame jFrame = this;
     private final CalculatingHolder holder;
+    private String imageGym = Constants.IMAGE_GYM;
+    private String imageLift = Constants.IMAGE_LIFT;
+    private String imageSquat = Constants.IMAGE_SQUAT;
     private JPanel northPanel;
     private JPanel middlePanel;
     private JPanel eastPanel;
@@ -62,6 +64,8 @@ public class MainFrame extends JFrame {
     private Locale locale;
     private Calculating currentCalculating;
 
+    private String path = null;
+
     public MainFrame() {
         holder = CalculatingHolder.getHolder();
         locale = Locale.getDefault();
@@ -80,6 +84,22 @@ public class MainFrame extends JFrame {
         updateTextRecourse();
     }
 
+    public void updateLight() {
+        imageGym = Constants.IMAGE_GYM;
+        imageLift = Constants.IMAGE_LIFT;
+        imageSquat = Constants.IMAGE_SQUAT;
+
+        updateTheImage(path);
+    }
+
+    public void updateDark() {
+        imageGym = Constants.IMAGE_GYM_DD;
+        imageLift = Constants.IMAGE_LIFT_DD;
+        imageSquat = Constants.IMAGE_SQUAT_DD;
+
+        updateTheImage(path);
+    }
+
     private void updateTextRecourse() {
         resourceBundle = ResourceBundle.getBundle(Constants.RES_NAME, locale);
     }
@@ -94,10 +114,16 @@ public class MainFrame extends JFrame {
         eastPanel.setMaximumSize(dimension);
 
         lightThemeButton = new JButton();
-        lightThemeButton.addActionListener(theme::light);
+        lightThemeButton.addActionListener((e) -> {
+            reversePath(false);
+            theme.light();
+        });
 
         darkThemeButton = new JButton();
-        darkThemeButton.addActionListener(theme::dark);
+        darkThemeButton.addActionListener((e) -> {
+            reversePath(true);
+            theme.dark();
+        });
 
         engLanguageButton = new JButton();
         engLanguageButton.addActionListener(text::setEngText);
@@ -168,12 +194,13 @@ public class MainFrame extends JFrame {
         add(southPanel, BorderLayout.SOUTH);
 
         theme.init();
-        theme.light(null);
+        theme.light();
         text.setEngText(null);
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         setLocationRelativeTo(null);
+
     }
 
     /**
@@ -186,39 +213,72 @@ public class MainFrame extends JFrame {
         eastPanel.updateUI();
     }
 
+    private void reversePath(boolean flag) {
+        if (flag) {
+            switch (path) {
+                case Constants.IMAGE_GYM:
+                    path = Constants.IMAGE_GYM_DD;
+                    break;
+                case Constants.IMAGE_LIFT:
+                    path = Constants.IMAGE_LIFT_DD;
+                    break;
+                case Constants.IMAGE_SQUAT:
+                    path = Constants.IMAGE_SQUAT_DD;
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            switch (path) {
+                case Constants.IMAGE_GYM_DD:
+                    path = Constants.IMAGE_GYM;
+                    break;
+                case Constants.IMAGE_LIFT_DD:
+                    path = Constants.IMAGE_LIFT;
+                    break;
+                case Constants.IMAGE_SQUAT_DD:
+                    path = Constants.IMAGE_SQUAT;
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    private void updateTheImage(String path) {
+        try {
+            BufferedImage image = ImageIO.read(new File(path));
+            ImageIcon imageIcon = new ImageIcon(image);
+            jLabel.setIcon(imageIcon);
+        } catch (IOException ex) {
+            LOG.info(ex.getMessage());
+        }
+    }
+
     /**
      * Contains method to switch images.
      */
     private class ImageUpdater {
         private void updateImage(ActionEvent e) {
 
-            String path = null;
-
             if (e == null) {
-                path = Constants.IMAGE_GYM;
+                path = imageGym;
             } else {
                 task.by.faifly.model.Type type = (task.by.faifly.model.Type)
                         ((JComboBox) e.getSource()).getSelectedItem();
                 switch (type) {
                     case BenchPressing:
-                        path = Constants.IMAGE_GYM;
+                        path = imageGym;
                         break;
                     case Deadlift:
-                        path = Constants.IMAGE_LIFT;
+                        path = imageLift;
                         break;
                     case Squats:
-                        path = Constants.IMAGE_SQUAT;
+                        path = imageSquat;
                         break;
                 }
             }
-
-            try {
-                BufferedImage image = ImageIO.read(new File(path));
-                ImageIcon imageIcon = new ImageIcon(image);
-                jLabel.setIcon(imageIcon);
-            } catch (IOException ex) {
-                LOG.info(ex.getMessage());
-            }
+            updateTheImage(path);
         }
     }
 
@@ -226,7 +286,7 @@ public class MainFrame extends JFrame {
      * Contains methods to apply light and dark themes and initial UI components state.
      */
     private class Theme {
-        private void light(ActionEvent e) {
+        private void light() {
 
             Marker.appendLightTheme(lightThemeButton, darkThemeButton,
                     engLanguageButton, rusLanguageButton, startButton);
@@ -237,9 +297,11 @@ public class MainFrame extends JFrame {
 
             lightThemeButton.setBorderPainted(true);
             darkThemeButton.setBorderPainted(false);
+
+            updateLight();
         }
 
-        private void dark(ActionEvent e) {
+        private void dark() {
 
             Marker.appendDarkTheme(lightThemeButton, darkThemeButton,
                     engLanguageButton, rusLanguageButton, startButton);
@@ -250,6 +312,8 @@ public class MainFrame extends JFrame {
 
             darkThemeButton.setBorderPainted(true);
             lightThemeButton.setBorderPainted(false);
+
+            updateDark();
         }
 
         private void init() {

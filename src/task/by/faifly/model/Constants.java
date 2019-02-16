@@ -19,6 +19,10 @@ public class Constants {
     public static final String IMAGE_LIFT = "res/images/lift.gif";
     public static final String IMAGE_SQUAT = "res/images/squat.gif";
 
+    public static final String IMAGE_GYM_DD = "res/images/gym_dd.gif";
+    public static final String IMAGE_LIFT_DD = "res/images/lift_dd.gif";
+    public static final String IMAGE_SQUAT_DD = "res/images/squat_dd.gif";
+
     public static final String RES_NAME = "resources";
     public static final String DATE_FORMATTING = "  %1$tT\t%1$te %1$tB %1$tY";
     public static final String EQUALS = " = ";

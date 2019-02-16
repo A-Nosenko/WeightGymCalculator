@@ -15,11 +15,15 @@ import java.util.ResourceBundle;
  * @version 1.0 2/10/2018.
  */
 public class Calculating {
+
+    private final Date theDate;
+
     private Type type;
     private int count;
     private double weight;
 
     public Calculating(Type type) {
+        this.theDate = new Date();
         this.type = type;
     }
 
@@ -46,7 +50,7 @@ public class Calculating {
         ResourceBundle resourceBundle = ResourceBundle.getBundle(Constants.RES_NAME, locale);
 
         String date = new Formatter().format(
-                locale, Constants.DATE_FORMATTING, new Date()).toString();
+                locale, Constants.DATE_FORMATTING, theDate).toString();
         builder.append(date);
         builder.append(System.lineSeparator());
 
